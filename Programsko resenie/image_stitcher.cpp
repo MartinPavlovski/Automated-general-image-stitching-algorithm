@@ -3,7 +3,6 @@
 #include <opencv2\stitching\stitcher.hpp>
 #include <string>
 #include <fstream>
-
 #include "opencv2/core/core.hpp"
 #include "opencv2/features2d/features2d.hpp"
 #include "opencv2/highgui/highgui.hpp"
@@ -21,10 +20,10 @@ cv::Mat calculate_hist(cv::Mat input_image)
 	int channels[] = { 0, 1 };
 	cv::Mat hist;
 	int h_bins = 50; int s_bins = 60;
-    int hist_size[] = { h_bins, s_bins };
+    	int hist_size[] = { h_bins, s_bins };
 	float h_ranges[] = { 0, 180 };
-    float s_ranges[] = { 0, 256 };
-    const float* ranges[] = { h_ranges, s_ranges };
+    	float s_ranges[] = { 0, 256 };
+    	const float* ranges[] = { h_ranges, s_ranges };
 
 	cv::calcHist(&image, 1, channels, cv::Mat(), hist, 2, hist_size, ranges);
 	cv::normalize(hist, hist);
@@ -97,8 +96,8 @@ int main()
 	int start_index = 0;
 	result_pano = partial_images[start_index];
 	processed_images[start_index] = true;
-
 	std::cout << std::endl;
+
 	while (!is_pano_completed(processed_images))
 	{
 		try
