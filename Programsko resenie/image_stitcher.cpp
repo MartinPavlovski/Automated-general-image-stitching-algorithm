@@ -44,8 +44,6 @@ struct ScaleFactor {
 
 
 
-
-
 cv::Mat stitch_pair(cv::Mat first_image, cv::Mat second_image)
 {
 	std::vector<cv::Mat> pair_of_partial_images;
@@ -78,7 +76,7 @@ void put_one_image_over_another(cv::Mat &background, cv::Mat &foreground, cv::Ma
 }
 
 cv::Mat overlay_images(cv::Mat image1, cv::Mat image2, std::vector<cv::KeyPoint> keypoints_1, std::vector<cv::KeyPoint> keypoints_2,
-					   std::vector<cv::DMatch> good_matches, int overlay_kp_index)
+		       std::vector<cv::DMatch> good_matches, int overlay_kp_index)
 {
 	cv::Mat pano;
 	image1.copyTo(pano);
@@ -92,8 +90,7 @@ cv::Mat overlay_images(cv::Mat image1, cv::Mat image2, std::vector<cv::KeyPoint>
 
 	start_pt = cv::Point(margin, margin);
 
-	cv::resize(pano, pano, cv::Size(image1.size().width + 2*(margin),
-									image1.size().height + 2*(margin)));
+	cv::resize(pano, pano, cv::Size(image1.size().width + 2*(margin), image1.size().height + 2*(margin)));
 
 	for (int i = 0; i < pano.rows; i++)
 		for (int j = 0; j < pano.cols; j++)
@@ -115,8 +112,7 @@ cv::Mat overlay_images(cv::Mat image1, cv::Mat image2, std::vector<cv::KeyPoint>
 
 	start_pt = cv::Point(margin, margin);
 
-	cv::resize(image2_background, image2_background, cv::Size(image2.size().width + 2*(margin),
-															  image2.size().height + 2*(margin)));
+	cv::resize(image2_background, image2_background, cv::Size(image2.size().width + 2*(margin), image2.size().height + 2*(margin)));
 
 	for (int i = 0; i < image2_background.rows; i++)
 		for (int j = 0; j < image2_background.cols; j++)
@@ -135,7 +131,7 @@ cv::Mat overlay_images(cv::Mat image1, cv::Mat image2, std::vector<cv::KeyPoint>
 
 	
 	location = cv::Point(margin + keypoints_2[good_matches[overlay_kp_index].trainIdx].pt.x,
-					     margin + keypoints_2[good_matches[overlay_kp_index].trainIdx].pt.y); 
+			     margin + keypoints_2[good_matches[overlay_kp_index].trainIdx].pt.y); 
 	
 	double angle = keypoints_2[good_matches[overlay_kp_index].trainIdx].angle - keypoints_1[good_matches[overlay_kp_index].queryIdx].angle;
 	cv::Mat R = cv::getRotationMatrix2D(location, angle,1);
@@ -146,7 +142,7 @@ cv::Mat overlay_images(cv::Mat image1, cv::Mat image2, std::vector<cv::KeyPoint>
 
 
 	start_pt = cv::Point(keypoints_1[good_matches[overlay_kp_index].queryIdx].pt.x - keypoints_2[good_matches[overlay_kp_index].trainIdx].pt.x,
-						 keypoints_1[good_matches[overlay_kp_index].queryIdx].pt.y - keypoints_2[good_matches[overlay_kp_index].trainIdx].pt.y);
+			     keypoints_1[good_matches[overlay_kp_index].queryIdx].pt.y - keypoints_2[good_matches[overlay_kp_index].trainIdx].pt.y);
 
 	put_one_image_over_another(pano, image2_background, pano, start_pt);
 	
@@ -244,8 +240,8 @@ cv::Mat overlay_images(cv::Mat image1, cv::Mat image2, std::vector<cv::KeyPoint>
 	lower_border_point.y += 2;
 	
 	pano = cv::Mat(pano, cv::Rect(left_border_point.x, upper_border_point.y,
-								  right_border_point.x - left_border_point.x,
-								  lower_border_point.y - upper_border_point.y));
+				      right_border_point.x - left_border_point.x,
+				      lower_border_point.y - upper_border_point.y));
 
 	return pano;
 }
@@ -253,9 +249,9 @@ cv::Mat overlay_images(cv::Mat image1, cv::Mat image2, std::vector<cv::KeyPoint>
 cv::Mat stitch_pair_by_overlaying(cv::Mat image1, cv::Mat image2, ImagePairCharacteristics image_pair_characteristics)
 {
 	cv::Mat pano = overlay_images(image1, image2, image_pair_characteristics.keypoints_of_first_image,
-												  image_pair_characteristics.keypoints_of_second_image,
-												  image_pair_characteristics.good_matches,
-												  image_pair_characteristics.min_dist_good_match_index);
+				      image_pair_characteristics.keypoints_of_second_image,
+				      image_pair_characteristics.good_matches,
+				      image_pair_characteristics.min_dist_good_match_index);
 	
 	return pano;
 }
@@ -365,7 +361,7 @@ cv::Mat calculate_hist(cv::Mat input_image)
 }
 
 SimilarImage find_similar_image(cv::Mat pano, std::vector<cv::Mat> partial_images, std::vector<bool> processed_images,
-								int knn_method, int feature_detector, int feature_extractor)
+				int knn_method, int feature_detector, int feature_extractor)
 {
 	SimilarImage most_similar_image;
 	if (knn_method == KNN_NUMBER_OF_GOOD_MATCHES)
@@ -376,7 +372,7 @@ SimilarImage find_similar_image(cv::Mat pano, std::vector<cv::Mat> partial_image
 			if (!processed_images[i])
 			{
 				ImagePairCharacteristics current_image_pair_characteristics = get_image_pair_characteristics(pano, partial_images[i],
-																											 feature_detector, feature_extractor);
+															     feature_detector, feature_extractor);
 				int number_of_good_matches = current_image_pair_characteristics.good_matches.size();
 				if (number_of_good_matches > max_number_of_good_matches)
 				{
@@ -396,7 +392,7 @@ SimilarImage find_similar_image(cv::Mat pano, std::vector<cv::Mat> partial_image
 			if (!processed_images[i])
 			{
 				ImagePairCharacteristics current_image_pair_characteristics = get_image_pair_characteristics(pano, partial_images[i],
-																											 feature_detector, feature_extractor);
+															     feature_detector, feature_extractor);
 				cv::Mat current_partial_image;
 				partial_images[i].copyTo(current_partial_image);
 				double hist_value = cv::compareHist(hist, calculate_hist(current_partial_image), CV_COMP_INTERSECT);
@@ -425,7 +421,7 @@ bool is_pano_completed(std::vector<bool> processed_images)
 
 
 void stitch_images(std::string image_set_info_file_path, int stitching_type, int stitching_method, int image_similarity_method,
-			       int feature_detector, int feature_extractor, std::string result_pano_file_path)
+	           int feature_detector, int feature_extractor, std::string result_pano_file_path)
 {
 	if (stitching_type == PANORAMIC_STITCHING)
 		std::cout << "\t===== PANORAMIC STITCHING OF IMAGES =====\n\n";
@@ -511,12 +507,12 @@ void stitch_images(std::string image_set_info_file_path, int stitching_type, int
 			if (stitching_method == STANDARD)
 			{
 				most_similar_image = find_similar_image(result_pano, partial_images, processed_images,
-														image_similarity_method, feature_detector, feature_extractor);
+								        image_similarity_method, feature_detector, feature_extractor);
 			}
 			else
 			{
 				most_similar_image = find_similar_image(scaled_result_pano, scaled_partial_images, processed_images,
-														image_similarity_method, feature_detector, feature_extractor);
+									image_similarity_method, feature_detector, feature_extractor);
 			}
 
 			std::cout << most_similar_image.similar_image_index << "\t\t\t\t";
@@ -557,11 +553,13 @@ void stitch_images(std::string image_set_info_file_path, int stitching_type, int
 			else
 			{
 				if (stitching_method == FAST)
-					scaled_result_pano = stitch_pair_by_overlaying(scaled_result_pano, scaled_partial_images[most_similar_image.similar_image_index],
-																   most_similar_image.image_pair_characteristics);
+					scaled_result_pano = stitch_pair_by_overlaying(scaled_result_pano,
+										       scaled_partial_images[most_similar_image.similar_image_index],
+										       most_similar_image.image_pair_characteristics);
 				else
-					result_pano = stitch_pair_by_overlaying(result_pano, partial_images[most_similar_image.similar_image_index],
-															most_similar_image.image_pair_characteristics);
+					result_pano = stitch_pair_by_overlaying(result_pano,
+										partial_images[most_similar_image.similar_image_index],
+										most_similar_image.image_pair_characteristics);
 			}
 			
 			processed_images[most_similar_image.similar_image_index] = true;
@@ -595,10 +593,10 @@ void stitch_images(std::string image_set_info_file_path, int stitching_type, int
 int main()
 {
 	stitch_images("Resources/PartialImagesInfo.csv", PANORAMIC_STITCHING, COMPROMISED, KNN_NUMBER_OF_GOOD_MATCHES,
-				   SIFT, SIFT, "Resources/partial_images/Pano(panoramic stitching).png");
+		       SIFT, SIFT, "Resources/partial_images/Pano(panoramic stitching).png");
 
 	stitch_images("Resources/PartialImagesInfo.csv", IMAGE_MOSAIC, STANDARD, KNN_NUMBER_OF_GOOD_MATCHES,
-				   SIFT, SIFT, "Resources/partial_images/Pano(image mosaic).png");
+		       SIFT, SIFT, "Resources/partial_images/Pano(image mosaic).png");
 	
 	cv::waitKey(0);
 	std::cout << "Done!" << std::endl;
