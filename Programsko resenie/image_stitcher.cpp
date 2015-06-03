@@ -614,6 +614,7 @@ void stitch_images(std::string image_set_info_file_path, int stitching_type, int
 				result_pano.copyTo(scaled_result_pano);
 				cv::resize(scaled_result_pano, scaled_result_pano, cv::Size(640, 480));
 
+				/* Ako tipot na spojuvanje e mosaic */
 				if (stitching_type == IMAGE_MOSAIC)
 				{
 					scale_factor_of_result_pano.x_axis_factor = (double)result_pano.cols / 640;
