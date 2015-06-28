@@ -1,7 +1,7 @@
 /******************************************************************************
 ** Avtori:		Martin Pavlovski IKI 115048
-**				Vladimir Ilievski IKI 115028
-**				Tamara Dimitrova KNI 111051
+**			Vladimir Ilievski IKI 115028
+**			Tamara Dimitrova KNI 111051
 **
 ** Opis:		Proekt po predmetot Masinska vizija
 ** 
@@ -230,7 +230,7 @@ cv::Mat overlay_images(cv::Mat image1, cv::Mat image2, std::vector<cv::KeyPoint>
 	for (int j = 0; j < pano.cols; j++)
 	{
 		for (int i = 0; i < pano.rows; i++)
-			
+			/* se dodeka alfa ne bide 255 */
 			if (pano.at<cv::Vec4b>(i,j).val[3] == 255)
 			{
 				left_border_point = cv::Point(j,i);
@@ -265,12 +265,12 @@ cv::Mat overlay_images(cv::Mat image1, cv::Mat image2, std::vector<cv::KeyPoint>
 	{
 		for (int j = 0; j < pano.cols; j++)
 			/* se dodeka alfa ne bide 255 */
-		if (pano.at<cv::Vec4b>(i,j).val[3] == 255)
-		{
-			upper_border_point = cv::Point(j,i);
-			break_flag = true;
-			break;
-		}
+			if (pano.at<cv::Vec4b>(i,j).val[3] == 255)
+			{
+				upper_border_point = cv::Point(j,i);
+				break_flag = true;
+				break;
+			}
 
 		if (break_flag)
 			break;
@@ -282,12 +282,12 @@ cv::Mat overlay_images(cv::Mat image1, cv::Mat image2, std::vector<cv::KeyPoint>
 	{
 		for (int j = 0; j < pano.cols; j++)
 			/* se dodeka alfa ne bide 255 */
-		if (pano.at<cv::Vec4b>(i,j).val[3] == 255)
-		{
-			lower_border_point = cv::Point(j,i);
-			break_flag = true;
-			break;
-		}
+			if (pano.at<cv::Vec4b>(i,j).val[3] == 255)
+			{
+				lower_border_point = cv::Point(j,i);
+				break_flag = true;
+				break;
+			}
 
 		if (break_flag)
 			break;
@@ -433,11 +433,11 @@ cv::Mat calculate_hist(cv::Mat input_image)
 	cv::Mat hist;
 	/* Broj na binovi za h i s vrednostite */
 	int h_bins = 50; int s_bins = 60;
-    int hist_size[] = { h_bins, s_bins };
-    /* Rang na vrednostite */
+    	int hist_size[] = { h_bins, s_bins };
+    	/* Rang na vrednostite */
 	float h_ranges[] = { 0, 180 };
-    float s_ranges[] = { 0, 256 };
-    const float* ranges[] = { h_ranges, s_ranges };
+    	float s_ranges[] = { 0, 256 };
+    	const float* ranges[] = { h_ranges, s_ranges };
 
 	cv::calcHist(&image, 1, channels, cv::Mat(), hist, 2, hist_size, ranges);
 	cv::normalize(hist, hist);
