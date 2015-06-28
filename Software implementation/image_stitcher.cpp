@@ -1,3 +1,12 @@
+/******************************************************************************
+** Avtori:		Martin Pavlovski IKI 115048
+**				Vladimir Ilievski IKI 115028
+**				Tamara Dimitrova KNI 111051
+**
+** Opis:		Proekt po predmetot Masinska vizija
+** 
+******************************************************************************/
+
 #include <iostream>
 #include <opencv2\opencv.hpp>
 #include <opencv2\stitching\stitcher.hpp>
@@ -324,16 +333,15 @@ cv::Mat stitch_pair_by_overlaying(cv::Mat image1, cv::Mat image2, ImagePairChara
 */
 ImagePairCharacteristics get_image_pair_characteristics(cv::Mat image1, cv::Mat image2, int feature_detector, int feature_extractor)
 {
-
 	/* Nadolu sleduva standardna procedura so koja se ekstraktiraat karakteristicnite tocki i deskriptori */
 
 	cv::Mat img_1;
 	cv::Mat img_2;
-	// Convert to Grayscale
+	// Konverzija na slikite vo Grayscale
 	cvtColor(image1, img_1, CV_RGB2GRAY);
 	cvtColor(image2, img_2, CV_RGB2GRAY);
  
-	//-- Step 1: Detect the keypoints using SURF/SIFT Detector 
+	// Cekor 1: Detektiranje na klucni tocki koristejkji SURF/SIFT detektor
 	int minHessian = 100;
 	std::vector<cv::KeyPoint> keypoints_1, keypoints_2;
 	if (feature_detector == SIFT)
@@ -349,7 +357,7 @@ ImagePairCharacteristics get_image_pair_characteristics(cv::Mat image1, cv::Mat 
 		detector.detect(img_2, keypoints_2);
 	}
 
-	//-- Step 2: Calculate descriptors (feature vectors)
+	// Cekor 2: Presmetuvanje na deskriptori (vektori na karakteristiki)
 	cv::Mat descriptors_1, descriptors_2;
 	if (feature_extractor == SIFT)
 	{
@@ -364,14 +372,14 @@ ImagePairCharacteristics get_image_pair_characteristics(cv::Mat image1, cv::Mat 
 		extractor.compute(img_2, keypoints_2, descriptors_2);
 	}
 
-	//-- Step 3: Matching descriptor vectors using FLANN matcher
+	// Cekor 3: Povrzuvanje na vektorite na deskriptorite koi si soodvetstvuvaat koristejkji FLANN matcher
 	cv::FlannBasedMatcher matcher;
 	std::vector< cv::DMatch > matches;
 	matcher.match( descriptors_1, descriptors_2, matches );
 
 	double max_dist = 0; double min_dist = 100;
 
-	//-- Quick calculation of max and min distances between keypoints
+	// Brza kalkulacija na maksimalnoto i minimalnoto rastojanie pomegju klucnite tocki
 	for(int i = 0; i < descriptors_1.rows; i++)
 	{ 
 		double dist = matches[i].distance;
@@ -379,10 +387,8 @@ ImagePairCharacteristics get_image_pair_characteristics(cv::Mat image1, cv::Mat 
 		if(dist > max_dist) max_dist = dist;
 	}
 	
-	//-- Draw only "good" matches (i.e. whose distance is less than 2*min_dist,
-	//-- or a small arbitary value ( 0.02 ) in the event that min_dist is very
-	//-- small)
-	//-- PS.- radiusMatch can also be used here.
+	// Pronaogjanje na "good" match-ovi (t.e. onie match-ovi cie rastojanie e pomalo ili ednakvo na 2*min_dist,
+	// ili pomalo od nekoja mala zadadena vrednost (0.02) vo slucaj koga rastojanieto min_dist e mnogu malo
 	std::vector< cv::DMatch > good_matches;
 
 	for(int i = 0; i < descriptors_1.rows; i++)
@@ -400,7 +406,7 @@ ImagePairCharacteristics get_image_pair_characteristics(cv::Mat image1, cv::Mat 
 			min_dist_good_match_index = i;
 		}
 
-	//-- Return only "good" matches
+	// Se vrakja struktura koja gi sodrzi najvaznite karakteristiki na parot od sliki
 	ImagePairCharacteristics image_pair_characteristics;
 	image_pair_characteristics.keypoints_of_first_image = keypoints_1;
 	image_pair_characteristics.keypoints_of_second_image = keypoints_2;
