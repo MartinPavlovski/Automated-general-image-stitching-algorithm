@@ -28,6 +28,7 @@ int FEATURE_EXTRACTOR;
 int MIN_DIST_FACTOR;
 int HOMOGRAPHY_METHOD;
 int NUM_PARTS;
+int SMOOTHING_ITERS;
 int USE_ROTATION;
 
 struct ImagePairCharacteristics {
@@ -679,8 +680,8 @@ int main( int argc, char** argv )
 	FEATURE_DETECTOR = SIFT;
 	FEATURE_EXTRACTOR = SIFT;
 	MIN_DIST_FACTOR = 3;
-	//HOMOGRAPHY_METHOD = 8;
 	NUM_PARTS = 2;
+	SMOOTHING_ITERS = 10;
 	USE_ROTATION = 0;
 
 	// Load the images
@@ -702,7 +703,7 @@ int main( int argc, char** argv )
 	for (int i = 1; i < partial_images.size(); i++)
 		pano = get_stitched_pair(pano, partial_images[i]);
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < SMOOTHING_ITERS; i++)
 	{
 		pano = smooth_filter(pano);
 		imwrite("Resources/Output/pano.png", pano);
